@@ -8,13 +8,13 @@ import {
 type ActionTooltipType = {
   children: React.ReactNode;
   label: string;
-  align: "start" | "center" | "end";
+  align?: "start" | "center" | "end";
   side: "top" | "right" | "left" | "bottom";
 };
 export default function ActionTooltip({
   children,
   label,
-  align,
+  align = "center",
   side,
 }: ActionTooltipType) {
   return (

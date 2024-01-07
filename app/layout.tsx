@@ -4,8 +4,10 @@ import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import ModalProvider from "@/components/providers/ModalProvider";
+import SocketProvider from "@/components/providers/SocketProvider";
+import QueryProvider from "@/components/providers/QueryProvider";
 
-const open = Open_Sans({ subsets: ["latin"] });
+const openfont = Open_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -20,15 +22,17 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
-        <body className={open.className}>
+        <body className={openfont.className}>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
             enableSystem
             storageKey="discord-theme"
           >
-            <ModalProvider />
-            {children}
+            <SocketProvider>
+              <ModalProvider />
+              <QueryProvider>{children}</QueryProvider>
+            </SocketProvider>
           </ThemeProvider>
         </body>
       </html>

@@ -8,7 +8,9 @@ const layout = ({ children }: { children: React.ReactNode }) => {
         <NavigationSideBar />
       </div>
 
-      <main className="h-full md:pl-[80px]">{children}</main>
+      <main className="h-full md:pl-[80px] dark:bg-zinc-700 bg-zinc-400">
+        {children}
+      </main>
     </div>
   );
 };

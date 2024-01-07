@@ -24,8 +24,9 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import { useEffect, useState } from "react";
 import FileUpload from "../FileUpload";
+import useModalStore from "@/hooks/useModalStore";
+import { useEffect, useState } from "react";
 
 const formSchema = z.object({
   serverName: z.string().min(1, {
@@ -35,8 +36,13 @@ const formSchema = z.object({
     message: "Server image is required.",
   }),
 });
-export function InitialModal() {
-  const [isMounted, setIsMounted] = useState(false);
+export function EditServerModal() {
+  const {
+    isOpen,
+    onClose,
+    type,
+    data: { server },
+  } = useModalStore();
   const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -47,36 +53,39 @@ export function InitialModal() {
     },
   });
 
+  useEffect(() => {
+    if (server) {
+      form.setValue("serverName", server.name);
+      form.setValue("imageUrl", server.imageUrl);
+    }
+  }, [server, form]);
+
+  const isModalOpen = isOpen && type === "editServer";
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await axios.post("/api/server", values);
+      await axios.patch(`/api/server/${server?.id}`, values);
 
       form.reset();
       router.refresh();
-      window.location.reload();
+      onClose();
     } catch (error) {
       console.log("ERROR", error);
     }
   };
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+  const handleClose = () => {
+    form.reset();
+    onClose();
+  };
 
-  if (!isMounted) {
-    return null;
-  }
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="outline">Create a Server</Button>
-      </DialogTrigger>
+    <Dialog open={isModalOpen} onOpenChange={handleClose}>
       <DialogContent className=" bg-slate-50 text-black p-0 overflow-hidden">
         <DialogHeader className="px-6 pt-7">
           <DialogTitle className="text-lg lg:text-2xl text-center font-bold">
-            Create your Server
+            Customize your Server
           </DialogTitle>
           <DialogDescription className="text-center text-zinc-400">
             {"Make changes to your profile here. Click save when you're done."}
@@ -127,8 +136,12 @@ export function InitialModal() {
             </div>
 
             <DialogFooter className="px-4 py-3 bg-gray-100">
-              <Button variant="primary" disabled={isLoading} type="submit">
-                Create
+              <Button
+                disabled={isLoading}
+                type="submit"
+                className="text-white bg-indigo-500 hover:bg-indigo-500/80"
+              >
+                Save
               </Button>
             </DialogFooter>
           </form>

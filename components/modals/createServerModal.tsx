@@ -113,10 +113,10 @@ export function CreateServerModal() {
                     </FormLabel>
                     <FormControl>
                       <Input
+                        {...field}
                         disabled={isLoading}
                         placeholder="Enter the Server Name"
                         className="bg-zinc-300/50 focus-visible:ring-0 focus-visible:ring-offset-0 border-0 text-black"
-                        {...field}
                       />
                     </FormControl>
                     <FormMessage />
