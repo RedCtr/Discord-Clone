@@ -48,7 +48,7 @@ const Conversation = async ({ params }: ConversationType) => {
   const otherMember =
     memberOne.profileId === profile?.id ? memberTwo : memberOne;
   return (
-    <div className="flex flex-col h-full bg-gray-50 dark:bg-[#313338]">
+    <div className="flex flex-col h-screen bg-gray-50 dark:bg-[#313338]">
       <ChatHeader
         serverId={params.serverId}
         name={otherMember.profile.name}
