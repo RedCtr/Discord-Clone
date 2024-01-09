@@ -8,6 +8,7 @@ const currentProfile = async () => {
         return null
     }
 
+    await db.$disconnect()
     const profile = await db.profile.findUnique({
         where: {
             userId

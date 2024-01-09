@@ -1,3 +1,4 @@
+import MediaRoom from "@/components/MediaRoom";
 import ChatHeader from "@/components/chat/ChatHeader";
 import ChatInput from "@/components/chat/ChatInput";
 import ChatMessages from "@/components/chat/ChatMessages";
@@ -13,9 +14,12 @@ type ConversationType = {
     memberId: string;
     serverId: string;
   };
+  searchParams: {
+    video?: boolean;
+  };
 };
 
-const Conversation = async ({ params }: ConversationType) => {
+const Conversation = async ({ params, searchParams }: ConversationType) => {
   const profile = await currentProfile();
   if (!profile) {
     redirectToSignIn();
@@ -56,28 +60,36 @@ const Conversation = async ({ params }: ConversationType) => {
         imageUrl={otherMember.profile.imageUrl}
       />
 
-      <ChatMessages
-        member={currentMember}
-        name={otherMember.profile.name}
-        chatId={conversation.id}
-        type="conversation"
-        apiUrl="/api/directMessages"
-        paramKey="conversationId"
-        paramValue={conversation.id}
-        socketUrl="/api/socket/directMessages"
-        socketQuery={{
-          conversationId: conversation.id,
-        }}
-      />
+      {searchParams.video && (
+        <MediaRoom chatId={conversation.id} audio={true} video={true} />
+      )}
 
-      <ChatInput
-        name={otherMember.profile.name}
-        type="conversation"
-        apiUrl="/api/socket/directMessages"
-        query={{
-          conversationId: conversation.id,
-        }}
-      />
+      {!searchParams.video && (
+        <>
+          <ChatMessages
+            member={currentMember}
+            name={otherMember.profile.name}
+            chatId={conversation.id}
+            type="conversation"
+            apiUrl="/api/directMessages"
+            paramKey="conversationId"
+            paramValue={conversation.id}
+            socketUrl="/api/socket/directMessages"
+            socketQuery={{
+              conversationId: conversation.id,
+            }}
+          />
+
+          <ChatInput
+            name={otherMember.profile.name}
+            type="conversation"
+            apiUrl="/api/socket/directMessages"
+            query={{
+              conversationId: conversation.id,
+            }}
+          />
+        </>
+      )}
     </div>
   );
 };
