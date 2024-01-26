@@ -69,10 +69,10 @@ export function InitialModal() {
     return null;
   }
   return (
-    <Dialog>
-      <DialogTrigger asChild>
+    <Dialog open>
+      {/* <DialogTrigger asChild>
         <Button variant="outline">Create a Server</Button>
-      </DialogTrigger>
+      </DialogTrigger> */}
       <DialogContent className=" bg-slate-50 text-black p-0 overflow-hidden">
         <DialogHeader className="px-6 pt-7">
           <DialogTitle className="text-lg lg:text-2xl text-center font-bold">
